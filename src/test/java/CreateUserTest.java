@@ -1,16 +1,13 @@
-import io.restassured.response.Response;
 import org.junit.Assert;
 import org.junit.Test;
 import stellarburgers.dto.CreateUserSuccessfulResponse;
 import stellarburgers.dto.ErrorMessageResponse;
 import stellarburgers.staticmethodsandvariables.UserAPI;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-
 public class CreateUserTest {
     UserAPI userAPI = new UserAPI();
     @Test
-    public void doesCreatingNewUserWorks(){
+    public void doesCreatingNewUserWork(){
         String email = "sdhfhds@yandex.ru";
         String password = "ffhhhj";
         String name = "Ivan";
