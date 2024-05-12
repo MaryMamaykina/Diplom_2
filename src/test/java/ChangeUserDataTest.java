@@ -15,15 +15,15 @@ public class ChangeUserDataTest {
         String newEmail = "like@yandex.ru";
         String newName = "cuteIvan";
         CreateUserSuccessfulResponse response1 = userAPI.createUser(email,password,name).as(CreateUserSuccessfulResponse.class);
-        String accesTocken = response1.getAccessToken().replace("Bearer ","");
-        userAPI.changeUserData(newEmail, newName, accesTocken).then().statusCode(SC_OK)
+        String accessToken = response1.getAccessToken().replace("Bearer ","");
+        userAPI.changeUserData(newEmail, newName, accessToken).then().statusCode(SC_OK)
                 .and()
                 .body("success", equalTo(true))
                 .and()
                 .body("user.email", equalTo(newEmail))
                 .and()
                 .body("user.name", equalTo(newName));
-        userAPI.deleteUser(accesTocken);
+        userAPI.deleteUser(accessToken);
     }
     @Test
     public void doesNotChangingUserDataWithoutAuthorizationWork() {
