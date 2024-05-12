@@ -2,7 +2,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import stellarburgers.dto.CreateUserSuccessfulResponse;
 import stellarburgers.dto.ErrorMessageResponse;
-import stellarburgers.staticmethodsandvariables.UserAPI;
+import stellarburgers.staticmethodsandvariables.*;
 
 public class CreateUserTest {
     UserAPI userAPI = new UserAPI();

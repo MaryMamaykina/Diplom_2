@@ -1,8 +1,7 @@
 package stellarburgers.staticmethodsandvariables;
 
 import io.restassured.response.Response;
-import stellarburgers.dto.CreateUserRequest;
-import stellarburgers.dto.LoginUserRequest;
+import stellarburgers.dto.*;
 
 import static io.restassured.RestAssured.given;
 
