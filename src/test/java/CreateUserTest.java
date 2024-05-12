@@ -1,8 +1,10 @@
+import io.restassured.response.Response;
 import org.junit.Assert;
 import org.junit.Test;
 import stellarburgers.dto.CreateUserSuccessfulResponse;
-import stellarburgers.dto.ErrorMessageResponse;
 import stellarburgers.staticmethodsandvariables.*;
+import static org.apache.http.HttpStatus.SC_FORBIDDEN;
+import static org.hamcrest.CoreMatchers.equalTo;
 
 public class CreateUserTest {
     UserAPI userAPI = new UserAPI();
@@ -21,11 +23,11 @@ public class CreateUserTest {
         String email = "sdhfhds@yandex.ru";
         String password = "ffhhhj";
         String name = "Ivan";
-        CreateUserSuccessfulResponse response = userAPI.createUser(email,password,name).as(CreateUserSuccessfulResponse.class);
-        ErrorMessageResponse response2 = userAPI.createUser(email,password,name).as(ErrorMessageResponse.class);
-        Assert.assertFalse(response2.isSuccess());
-
-        userAPI.deleteUser(response.getAccessToken().replace("Bearer ",""));
+        Response response = userAPI.createUser(email,password,name);
+        userAPI.createUser(email,password,name).then().statusCode(SC_FORBIDDEN)
+                .and()
+                .body("success", equalTo(false));
+        userAPI.deleteUser(response.as(CreateUserSuccessfulResponse.class).getAccessToken().replace("Bearer ",""));
     }
 
     @Test
@@ -33,8 +35,9 @@ public class CreateUserTest {
         String email = null;
         String password = "ffhhhj";
         String name = "Ivan";
-        ErrorMessageResponse response = userAPI.createUser(email,password,name).as(ErrorMessageResponse.class);
-        Assert.assertFalse(response.isSuccess());
+        userAPI.createUser(email,password,name).then().statusCode(SC_FORBIDDEN)
+                .and()
+                .body("success", equalTo(false));
     }
 
     @Test
@@ -42,8 +45,9 @@ public class CreateUserTest {
         String email = "sdhfhds@yandex.ru";
         String password = null;
         String name = "Ivan";
-        ErrorMessageResponse response = userAPI.createUser(email,password,name).as(ErrorMessageResponse.class);
-        Assert.assertFalse(response.isSuccess());
+        userAPI.createUser(email,password,name).then().statusCode(SC_FORBIDDEN)
+                .and()
+                .body("success", equalTo(false));
     }
 
     @Test
@@ -51,8 +55,9 @@ public class CreateUserTest {
         String email = "sdhfhds@yandex.ru";
         String password = "ffhhhj";
         String name = null;
-        ErrorMessageResponse response = userAPI.createUser(email,password,name).as(ErrorMessageResponse.class);
-        Assert.assertFalse(response.isSuccess());
+        userAPI.createUser(email,password,name).then().statusCode(SC_FORBIDDEN)
+                .and()
+                .body("success", equalTo(false));
     }
 
 }

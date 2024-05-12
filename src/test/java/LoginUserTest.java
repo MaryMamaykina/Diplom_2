@@ -4,6 +4,9 @@ import stellarburgers.dto.CreateUserSuccessfulResponse;
 import stellarburgers.dto.ErrorMessageResponse;
 import stellarburgers.staticmethodsandvariables.UserAPI;
 
+import static org.apache.http.HttpStatus.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+
 public class LoginUserTest {
     UserAPI userAPI = new UserAPI();
     @Test
@@ -11,10 +14,10 @@ public class LoginUserTest {
         String email = "sdhfhds@yandex.ru";
         String password = "ffhhhj";
         String name = "Ivan";
-        userAPI.createUser(email,password,name);
-        CreateUserSuccessfulResponse response = userAPI.loginUser(email,password).as(CreateUserSuccessfulResponse.class);
-        Assert.assertTrue(response.isSuccess());
-
+        CreateUserSuccessfulResponse response = userAPI.createUser(email,password,name).as(CreateUserSuccessfulResponse.class);
+        userAPI.loginUser(email,password).then().statusCode(SC_OK)
+                .and()
+                .body("success", equalTo(true));
         userAPI.deleteUser(response.getAccessToken().replace("Bearer ",""));
     }
 
@@ -25,9 +28,9 @@ public class LoginUserTest {
         String password = "ffhhhj";
         String name = "Ivan";
         CreateUserSuccessfulResponse response = userAPI.createUser(email,password,name).as(CreateUserSuccessfulResponse.class);
-        ErrorMessageResponse response2 = userAPI.loginUser(wrongEmail,password).as(ErrorMessageResponse.class);
-        Assert.assertFalse(response2.isSuccess());
-
+        userAPI.loginUser(wrongEmail,password).then().statusCode(SC_UNAUTHORIZED)
+                .and()
+                .body("success", equalTo(false));
         userAPI.deleteUser(response.getAccessToken().replace("Bearer ",""));
     }
 
@@ -38,9 +41,9 @@ public class LoginUserTest {
         String wrongPassword = "adfgsrh";
         String name = "Ivan";
         CreateUserSuccessfulResponse response = userAPI.createUser(email,password,name).as(CreateUserSuccessfulResponse.class);
-        ErrorMessageResponse response2 = userAPI.loginUser(email,wrongPassword).as(ErrorMessageResponse.class);
-        Assert.assertFalse(response2.isSuccess());
-
+        userAPI.loginUser(email,wrongPassword).then().statusCode(SC_UNAUTHORIZED)
+                .and()
+                .body("success", equalTo(false));
         userAPI.deleteUser(response.getAccessToken().replace("Bearer ",""));
     }
 
@@ -52,9 +55,9 @@ public class LoginUserTest {
         String wrongPassword = "adfgsrh";
         String name = "Ivan";
         CreateUserSuccessfulResponse response = userAPI.createUser(email,password,name).as(CreateUserSuccessfulResponse.class);
-        ErrorMessageResponse response2 = userAPI.loginUser(wrongEmail,wrongPassword).as(ErrorMessageResponse.class);
-        Assert.assertFalse(response2.isSuccess());
-
+        userAPI.loginUser(wrongEmail,wrongPassword).then().statusCode(SC_UNAUTHORIZED)
+                .and()
+                .body("success", equalTo(false));
         userAPI.deleteUser(response.getAccessToken().replace("Bearer ",""));
     }
 
