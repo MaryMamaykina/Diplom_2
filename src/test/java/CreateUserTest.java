@@ -14,7 +14,6 @@ public class CreateUserTest {
         CreateUserSuccessfulResponse response = userAPI.createUser(email,password,name).as(CreateUserSuccessfulResponse.class);
         Assert.assertTrue(response.isSuccess());
 
-
         userAPI.deleteUser(response.getAccessToken().replace("Bearer ",""));
     }
     @Test
