@@ -1,4 +1,5 @@
 import io.restassured.response.Response;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,9 +10,9 @@ import static org.hamcrest.CoreMatchers.equalTo;
 
 public class LoginUserTest {
     UserAPI userAPI = new UserAPI();
-    String email = "sdhfhdqwes@yandex.ru";
-    String password= "ffhhhj";
-    String name = "Ivan";
+    String email = (RandomStringUtils.randomAlphabetic(9) + "@yandex.ru").toLowerCase();
+    String password = RandomStringUtils.randomAlphabetic(7);
+    String name = RandomStringUtils.randomAlphabetic(11);
     String userAssesToken;
     @Before
     public void setup() {

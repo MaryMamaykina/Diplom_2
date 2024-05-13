@@ -1,4 +1,5 @@
 import io.restassured.response.Response;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
 import org.junit.Test;
 import stellarburgers.dto.CreateUserSuccessfulResponse;
@@ -12,9 +13,9 @@ import static org.hamcrest.CoreMatchers.equalTo;
 public class ReceivingUserOrdersTest {
     UserAPI userAPI = new UserAPI();
     OrdersAPI ordersAPI = new OrdersAPI();
-    String email = "sdhfhuqdy@yandex.ru";
-    String password = "ffhhhj";
-    String name = "Ivan";
+    String email = (RandomStringUtils.randomAlphabetic(9) + "@yandex.ru").toLowerCase();
+    String password = RandomStringUtils.randomAlphabetic(7);
+    String name = RandomStringUtils.randomAlphabetic(11);
     String userAssesToken;
 
     @Test

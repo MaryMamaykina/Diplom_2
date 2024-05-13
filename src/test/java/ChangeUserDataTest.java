@@ -1,3 +1,4 @@
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 import stellarburgers.dto.CreateUserSuccessfulResponse;
 import stellarburgers.staticmethodsandvariables.UserAPI;
@@ -7,11 +8,11 @@ import static org.hamcrest.CoreMatchers.equalTo;
 
 public class ChangeUserDataTest {
     UserAPI userAPI = new UserAPI();
-    String email = "sdhfhuqdy@yandex.ru";
-    String password = "ffhhhj";
-    String name = "Ivan";
-    String newEmail = "like@yandex.ru";
-    String newName = "cuteIvan";
+    String email = (RandomStringUtils.randomAlphabetic(9) + "@yandex.ru").toLowerCase();
+    String password = RandomStringUtils.randomAlphabetic(7);
+    String name = RandomStringUtils.randomAlphabetic(11);
+    String newEmail = (RandomStringUtils.randomAlphabetic(9) + "@yandex.ru").toLowerCase();
+    String newName = RandomStringUtils.randomAlphabetic(11);
 
     @Test
     public void doesChangingUserDataWithAuthorizationWork() {
@@ -42,11 +43,11 @@ public class ChangeUserDataTest {
     public void doesChangingUserDataWithAuthorizationAllowsChangeEmail() {
         CreateUserSuccessfulResponse response1 = userAPI.createUser(email,password,name).as(CreateUserSuccessfulResponse.class);
         String accessToken = response1.getAccessToken().replace("Bearer ","");
-        userAPI.changeUserData(name, newEmail, accessToken).then().statusCode(SC_OK)
+        userAPI.changeUserData(newEmail, name, accessToken).then().statusCode(SC_OK)
                 .and()
                 .body("success", equalTo(true))
                 .and()
-                .body("user.name", equalTo(newEmail));
+                .body("user.email", equalTo(newEmail));
         userAPI.deleteUser(accessToken);
     }
     @Test
