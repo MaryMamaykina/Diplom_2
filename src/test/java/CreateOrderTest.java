@@ -1,3 +1,5 @@
+import io.restassured.response.Response;
+import org.junit.After;
 import org.junit.Test;
 import stellarburgers.dto.CreateUserSuccessfulResponse;
 import stellarburgers.staticmethodsandvariables.OrdersAPI;
@@ -8,20 +10,19 @@ import static org.hamcrest.CoreMatchers.equalTo;
 public class CreateOrderTest {
     OrdersAPI ordersAPI = new OrdersAPI();
     UserAPI userAPI = new UserAPI();
+    String email = "sdhfhuqdy@yandex.ru";
+    String password = "ffhhhj";
+    String name = "Ivan";
+    String userAssesToken;
+
     @Test
     public void doesCreateOrderWithAuthorizationWork() {
-        String email = "sdhfhuqdy@yandex.ru";
-        String password = "ffhhhj";
-        String name = "Ivan";
         String[] ingredients = new String[] { "61c0c5a71d1f82001bdaaa6d","61c0c5a71d1f82001bdaaa6f" };
-        CreateUserSuccessfulResponse response1 = userAPI.createUser(email,password,name).as(CreateUserSuccessfulResponse.class);
+        userAPI.createUser(email,password,name);
         ordersAPI.createOrder(ingredients).then().statusCode(SC_OK)
                 .and()
                 .body("success", equalTo(true));
-
-        userAPI.deleteUser(response1.getAccessToken().replace("Bearer ",""));
     }
-
     @Test
     public void doesCreateOrderWithoutAuthorizationWork() {
         String[] ingredients = new String[] {"61c0c5a71d1f82001bdaaa6d","61c0c5a71d1f82001bdaaa6f"};
@@ -29,7 +30,6 @@ public class CreateOrderTest {
                 .and()
                 .body("success", equalTo(true));
     }
-
     @Test
     public void doesNotCreateOrderWithoutAuthorizationAndIngredientsWork() {
         String[] ingredients = null;
@@ -41,6 +41,14 @@ public class CreateOrderTest {
     public void doesNotCreateOrderWithoutAuthorizationAndWithWrongIngredientsWork() {
         String[] ingredients= new String[]{"123"};
         ordersAPI.createOrder(ingredients).then().statusCode(SC_INTERNAL_SERVER_ERROR);
+    }
+    @After
+    public void teardown() {
+        Response response = userAPI.loginUser(email,password);
+        int statusCode = response.getStatusCode();
+        if(statusCode==200){
+            userAssesToken = response.as(CreateUserSuccessfulResponse.class).getAccessToken().replace("Bearer ", "");
+            userAPI.deleteUser(userAssesToken);}
     }
 
 
