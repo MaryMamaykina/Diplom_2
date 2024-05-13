@@ -1,3 +1,5 @@
+import io.qameta.allure.Description;
+import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.Response;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
@@ -19,6 +21,8 @@ public class ReceivingUserOrdersTest {
     String userAssesToken;
 
     @Test
+    @DisplayName("Получение списка заказов для авторизованного пользователя работает?")
+    @Description("Проверка возможности получения списка своих заказов авторизованному пользователю")
     public void doesReceivingUserOrdersWithAuthorizationWork() {
 
         CreateUserSuccessfulResponse response = userAPI.createUser(email,password,name).as(CreateUserSuccessfulResponse.class);
@@ -29,7 +33,9 @@ public class ReceivingUserOrdersTest {
         userAPI.deleteUser(accessToken);
     }
     @Test
-    public void doesNotReceivingUserOrdersWithoutAuthorizationWork() {
+    @DisplayName("Получение списка заказов для неавторизованного пользователя невозможна?")
+    @Description("Проверка невозможности получения списка своих заказов неавторизованному пользователю")
+    public void doesReceivingUserOrdersWithoutAuthorizationImpossible() {
         String accessToken = "";
         ordersAPI.receivingUserOrders(accessToken).then().statusCode(SC_UNAUTHORIZED)
                 .and()

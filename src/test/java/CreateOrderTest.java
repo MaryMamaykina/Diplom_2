@@ -1,3 +1,5 @@
+import io.qameta.allure.Description;
+import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.Response;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
@@ -27,6 +29,8 @@ public class CreateOrderTest {
     }
 
     @Test
+    @DisplayName("Создание заказа авторизированным пользователем работает?")
+    @Description("Проверка возможности создания заказа авторизированным пользователем. Создание заказа с ингредиентами")
     public void doesCreateOrderWithAuthorizationWork() {
         String[] ingredients = ingredientsFromAPI.toArray(new String[]{});
         userAPI.createUser(email,password,name);
@@ -35,6 +39,8 @@ public class CreateOrderTest {
                 .body("success", equalTo(true));
     }
     @Test
+    @DisplayName("Создание заказа неавторизированным пользователем работает?")
+    @Description("Проверка возможности создания заказа неавторизированным пользователем. Создание заказа с ингредиентами")
     public void doesCreateOrderWithoutAuthorizationWork() {
         String[] ingredients = ingredientsFromAPI.toArray(new String[]{});
         ordersAPI.createOrder(ingredients).then().statusCode(SC_OK)
@@ -42,14 +48,18 @@ public class CreateOrderTest {
                 .body("success", equalTo(true));
     }
     @Test
-    public void doesNotCreateOrderWithoutAuthorizationAndIngredientsWork() {
+    @DisplayName("Создание заказа неавторизированным пользователем без ингредиентов невозможно?")
+    @Description("Проверка невозможности создания заказа неавторизированным пользователем без ингредиентов")
+    public void doesCreateOrderWithoutAuthorizationAndIngredientsImpossible() {
         String[] ingredients = null;
         ordersAPI.createOrder(ingredients).then().statusCode(SC_BAD_REQUEST)
                 .and()
                 .body("success", equalTo(false));
     }
     @Test
-    public void doesNotCreateOrderWithoutAuthorizationAndWithWrongIngredientsWork() {
+    @DisplayName("Создание заказа неавторизированным пользователем с неверным хешем ингредиентов невозможно?")
+    @Description("Проверка невозможности создания заказа неавторизированным пользователем с неверным хешем ингредиентов")
+    public void doesCreateOrderWithoutAuthorizationAndWithWrongIngredientsImpossible() {
         String[] ingredients= new String[]{"123"};
         ordersAPI.createOrder(ingredients).then().statusCode(SC_INTERNAL_SERVER_ERROR);
     }
